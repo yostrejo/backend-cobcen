@@ -16,7 +16,7 @@ const reader= require('xlsx');
 const loginRoutes = require('../src/routes/login')
 
 //settings
-app.set("port", process.env.PORT | PORT);
+app.set("port", process.env.PORT || PORT);
 
 //midlewares
 app.use(morgan("dev"));
