@@ -18,6 +18,7 @@ const loginRoutes = require('../src/routes/login')
 //settings
 app.set("port", process.env.PORT || PORT);
 
+
 //midlewares
 app.use(morgan("dev"));
 app.use(express.json());
