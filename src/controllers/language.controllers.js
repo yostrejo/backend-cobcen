@@ -79,110 +79,36 @@ const getSector1 = async (req, res) => {
 
 const createRegistro = (req, res) => {
 
-  try{
 
   const workbook = xlsx.readFile(path.join(__dirname, '../files/' + req.file.filename));
   const sheet_name_list = workbook.SheetNames;
   const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
-  const CONSUMO = data.CONSUMO
-  const IMPORTE = data.IMPORTETOTAL
-  const RPU = data.RPU
-  
-  data.forEach(async (row) => {
+   data.forEach(async (row) => {
 
     const {RPU, CONSUMO, IMPORTETOTAL} = row;
-    const sql = `UPDATE general SET Consumo =?, Importe =?, WHERE RPU= ?`;
+    const sql = `UPDATE general SET Consumo = Consumo + '${CONSUMO}', Importe = Importe + '${IMPORTETOTAL}' WHERE RPU ='${RPU}'`;
     const values = [CONSUMO, IMPORTETOTAL, RPU];
   
   const connection = await getConnection();
-   connection.query(sql, values, (error, results) => {
+   connection.query(sql, (error, results) => {
    if (error) throw error;
    // if(error) return res.status(500).send('server error');
          console.log(values, results);
    
     });
-  
+       
 });
-} catch(error){
-  const result = {
-    status: "fail",
-    filename: req.file.originalname,
-    message: "Upload Error! message = " + error.message
-}
-res.json(result);
-}
 
+  fs.unlinkSync(path.join(__dirname, '../files/' + req.file.filename))
 
 };
 
-//const file = fs.readFileSync(path.join(__dirname, '../files/' + req.file.filename))
-//const data = await file.arrayBuffer(file);
-//const excelfile = xlsx.read(data);
-//const excelSheet = excelfile.Sheets[excelfile.SheetNames[0]];
-//const exceljson = xlsx.utils.sheet_to_json(excelSheet);
 
-//const RPU = xlsx.utils.decode_col('0');
-//const CONSUMO = xlsx.utils.decode_col('8');
-//const IMPORTE = xlsx.utils.decode_col('16');
-
-
-
-/* Insertar los valores en la tabla de MySQL
-const query = `UPDATE general SET Consumo = '${CONSUMO}', Importe = '${IMPORTE}' WHERE RPU = '${RPU}'`;
-connection.query(query, (error, results, fields) => {
-  if (error) throw error;
-  console.log(exceljson);
-});
-}*/
-/*
-const connection= await getConnection();
-const result=await connection.query(`UPDATE general SET Consumo = '${CONSUMO}', Importe = '${IMPORTETOTAL}' WHERE RPU = '${RPU}'`, [req.files.file]);
-  console.log(result);
-  res.json(result);
- 
-*/
-
-
-const uploadRegistro = async (req, res) => {
+ const formatRegistros = async (req, res) => {
   const connection = await getConnection();
-
-  const data = (__dirname, '../files' + req.file.filename)
-
-  readXlsxFile(data).then(rows => {
-
-    console.log(rows);
-    const regs = [];
-    let length = rows.length;
-
-    for (let i = 0; i < length; i++) {
-      let reg = {
-        RPU: rows[i][0],
-        CONSUMO: rows[i][8],
-        IMPORTETOTAL: rows[i][16],
-      }
-
-      regs.push(reg)
-    }
-
-
-
-
-  })
-
-  const result = await connection.query('INSERT INTO image set ?', [{ type, name, data }], (err, rows) => {
-    if (err) return res.status(500).send('server error')
-/*("UPDATE general SET ? WHERE RPU = ?", [req.body, req.params.RPU])*/;
-    console.log(result);
-    res.json(result);
-
-  })
-};
-
-const formatRegistros = async (req, res) => {
-  const connection = await getConnection();
-   const result = await connection.query("UPDATE general SET ? Consumo = '', Importe = ''");
-  console.log(result);
+   const result = await connection.query("UPDATE general SET Consumo ='', Importe =''");
+  console.log(result);  
   res.json(result);
 
 };
@@ -195,10 +121,16 @@ const getRegistros = async (req, res) => {
   res.json(result);
 };
 
+const searchRegistro = async (req, res) => {
+  const connection = await getConnection();
+  const search = req.body
+  const result = await connection.query(`SELECT * FROM general WHERE Id_categoria LIKE '${search}' OR RPU LIKE '${search}' OR Dependencia LIKE '${search}' OR Men_Bim LIKE '${search}' OR TFA LIKE '${search}' OR Consumo LIKE '${search}' OR Importe LIKE '${search}'`, [search]);
+  console.log(result);
+  res.json(result);
 
-
-
+};
 
 export const methods = {
-    /* uploadExcel,*/ uploadRegistro, formatRegistros, getRegistros, createRegistro, getSector1, getSector, getLanguages, getLanguage, createLanguage, updateLanguage, deleteLanguage
+    searchRegistro, formatRegistros, getRegistros, createRegistro, getSector1, getSector, getLanguages, getLanguage, createLanguage, updateLanguage, deleteLanguage
 };
+

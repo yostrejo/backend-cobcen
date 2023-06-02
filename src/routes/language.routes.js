@@ -32,10 +32,10 @@ router.post("/", languageController.createLanguage);
 router.put("/:RPU", languageController.updateLanguage);
 router.delete("/:RPU", languageController.deleteLanguage);
 
-router.put("/formatear", languageController.formatRegistros);
-
+router.post("/formatear", languageController.formatRegistros);
 
 router.post('/files', fileUpload, languageController.createRegistro);
+router.get('/search/:search', languageController.searchRegistro);
 /*
 async (req, res) => {
 
