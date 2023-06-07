@@ -26,16 +26,15 @@ const fileUpload = multer({
 router.get("/", languageController.getLanguages);
 router.get("/registros", languageController.getRegistros);
 router.get("/sectores", languageController.getSector);
-router.get("/poderejecutivo", languageController.getSector1);
 router.get("/:RPU", languageController.getLanguage);
 router.post("/", languageController.createLanguage);
 router.put("/:RPU", languageController.updateLanguage);
 router.delete("/:RPU", languageController.deleteLanguage);
-
 router.post("/formatear", languageController.formatRegistros);
-
 router.post('/files', fileUpload, languageController.createRegistro);
 router.get('/search/:search', languageController.searchRegistro);
+router.get("/poderejecutivo", languageController.getSector1);
+
 /*
 async (req, res) => {
 

@@ -20,3 +20,6 @@ const getConnection = () => {
 module.exports = {
     getConnection
 };  
+
+//mysql: 
+//be4fedc2a25755:9408c432@us-cdbr-east-06.cleardb.net/heroku_6c69b5bd46c3da9?reconnect=true

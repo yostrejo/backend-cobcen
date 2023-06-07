@@ -70,7 +70,7 @@ const getSector = async (req, res) => {
 const getSector1 = async (req, res) => {
 
   const connection = await getConnection();
-  const result = await connection.query("SELECT * FROM `poder ejecutivo`");
+  const result = await connection.query("SELECT * FROM general WHERE Id_categoria=?", [req.params.Id_Categoria]);
   console.log(result);
   res.json(result);
 
