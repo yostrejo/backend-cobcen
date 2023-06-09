@@ -130,6 +130,8 @@ const searchRegistro = async (req, res) => {
 
 };
 
+
+
 export const methods = {
     searchRegistro, formatRegistros, getRegistros, createRegistro, getSector1, getSector, getLanguages, getLanguage, createLanguage, updateLanguage, deleteLanguage
 };
